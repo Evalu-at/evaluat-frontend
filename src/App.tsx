@@ -1,9 +1,9 @@
-function App() {
+import { GridLayout } from './layouts/gridLayout';
+import { LoginPage } from './pages/loginPage';
+export function App() {
   return (
-    <div>
-      <p>Evalu.at</p>
-    </div>
+    <GridLayout>
+      <LoginPage />
+    </GridLayout>
   );
 }
-
-export default App;
