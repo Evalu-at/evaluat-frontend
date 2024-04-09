@@ -1,9 +1,9 @@
 import evaluAtIcon from '../assets/evaluAtIcon.svg';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { BgIconLayout } from '@/layouts/bgIconLayout';
 import z from 'zod';
 import {
   Form,
@@ -37,19 +37,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="gap-5 flex flex-col place-self-center">
-      {/* Adicionando a imagem evaluAtCornerLeft no canto inferior esquerdo */}
-      <img
-        className="absolute bottom-0 left-0"
-        src={evaluAtCornerLeft}
-        style={{ width: '100px' }}
-      />
-      {/* Adicionando a imagem evaluAtCornerRight no canto superior direito */}
-      <img
-        className="absolute top-0 right-0"
-        src={evaluAtCornerRight}
-        style={{ width: '100px' }}
-      />
+    <div className="absolute flex flex-col place-self-center gap-5">
       <img className="" src={evaluAtIcon} />
       <Form {...form}>
         <form className="flex flex-col gap-3">
@@ -92,7 +80,6 @@ export function LoginPage() {
           </Button>
         </form>
       </Form>
-
       <span className="text-slate-600">
         Ainda não tem conta?{' '}
         <a className=" underline" href="">
