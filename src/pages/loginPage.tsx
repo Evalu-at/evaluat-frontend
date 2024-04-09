@@ -18,7 +18,7 @@ import {
 export function LoginPage() {
   const formSchema = z.object({
     email: z.string().email(),
-    password: z.string().min(2, { message: 'Senha muito curta' }),
+    password: z.string().min(8, { message: 'Senha muito curta' }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,7 +37,19 @@ export function LoginPage() {
   }
 
   return (
-    <div className="gap-5 flex flex-col">
+    <div className="gap-5 flex flex-col place-self-center">
+      {/* Adicionando a imagem evaluAtCornerLeft no canto inferior esquerdo */}
+      <img
+        className="absolute bottom-0 left-0"
+        src={evaluAtCornerLeft}
+        style={{ width: '100px' }}
+      />
+      {/* Adicionando a imagem evaluAtCornerRight no canto superior direito */}
+      <img
+        className="absolute top-0 right-0"
+        src={evaluAtCornerRight}
+        style={{ width: '100px' }}
+      />
       <img className="" src={evaluAtIcon} />
       <Form {...form}>
         <form className="flex flex-col gap-3">
