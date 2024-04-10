@@ -14,6 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Link } from 'react-router-dom';
 
 export function LoginPage() {
   const formSchema = z.object({
@@ -72,7 +73,7 @@ export function LoginPage() {
             )}
           />
           <Button
-            type="button"
+            type="submit"
             className="hover:bg-slate-700 text-white bg-slate-950 rounded"
             disabled={!form.formState.isValid}
             onClick={form.handleSubmit(onSubmit)}
@@ -83,9 +84,9 @@ export function LoginPage() {
       </Form>
       <span className="text-slate-600">
         Ainda não tem conta?{' '}
-        <a className=" underline" href="">
+        <Link className=" underline" to="/signup">
           Clique Aqui.
-        </a>
+        </Link>
       </span>
     </div>
   );
