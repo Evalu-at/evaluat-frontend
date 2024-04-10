@@ -3,7 +3,6 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { BgIconLayout } from '@/layouts/bgIconLayout';
 import z from 'zod';
 import {
   Form,
@@ -37,16 +36,17 @@ export function LoginPage() {
 
   return (
     <div className="">
-      <img className="p-5" src={evaluAtIcon} />
+      <img className="pb-[35px]" src={evaluAtIcon} />
       <Form {...form}>
-        <form className="flex flex-col gap-3">
+        <form className="flex flex-col">
           <FormField
             name="email"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="pb-4">
                 <FormControl>
                   <Input
+                    type="email"
                     className="rounded text-slate-700"
                     placeholder="Email"
                     {...field}
@@ -60,9 +60,10 @@ export function LoginPage() {
             name="password"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="pb-[27px]">
                 <FormControl>
                   <Input
+                    type="password"
                     className="rounded text-slate-700"
                     placeholder="Senha"
                     {...field}
@@ -74,7 +75,7 @@ export function LoginPage() {
           />
           <Button
             type="submit"
-            className="hover:bg-slate-700 text-white bg-slate-950 rounded"
+            className="hover:bg-slate-700 text-white bg-slate-900 rounded"
             disabled={!form.formState.isValid}
             onClick={form.handleSubmit(onSubmit)}
           >
@@ -82,12 +83,12 @@ export function LoginPage() {
           </Button>
         </form>
       </Form>
-      <span className="text-slate-600">
+      <div className="text-center text-slate-500 pt-3">
         Ainda não tem conta?{' '}
-        <Link className=" underline" to="/signup">
+        <Link className="underline" to="/signup">
           Clique Aqui.
         </Link>
-      </span>
+      </div>
     </div>
   );
 }
