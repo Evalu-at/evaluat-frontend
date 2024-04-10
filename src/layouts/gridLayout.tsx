@@ -4,7 +4,6 @@ export function GridLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="px-[50px] py-20  h-screen w-screen flex justify-center items-center">
       <div className=" min-h-full min-w-full grid grid-cols-12 gap-8">
-        {/* <div className="bg-black/10"></div>
         <div className="bg-black/10"></div>
         <div className="bg-black/10"></div>
         <div className="bg-black/10"></div>
@@ -15,8 +14,9 @@ export function GridLayout({ children }: { children: React.ReactNode }) {
         <div className="bg-black/10"></div>
         <div className="bg-black/10"></div>
         <div className="bg-black/10"></div>
-        <div className="bg-black/10"></div> */}
-        <div>{children}</div>
+        <div className="bg-black/10"></div>
+        <div className="bg-black/10"></div>
+        <div className="absolute flex place-self-center">{children}</div>
       </div>
       <BgIconLayout />
       <div className="absolute text-[#0F172A] text-xs font-inter bottom-0 place-self-center">

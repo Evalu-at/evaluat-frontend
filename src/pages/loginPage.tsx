@@ -17,7 +17,7 @@ import {
 
 export function LoginPage() {
   const formSchema = z.object({
-    email: z.string().email(),
+    email: z.string().email({ message: 'Formato de e-mail inválido' }),
     password: z.string().min(8, { message: 'Senha muito curta' }),
   });
 
@@ -31,14 +31,12 @@ export function LoginPage() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values);
   }
 
   return (
-    <div className="absolute flex flex-col place-self-center gap-5">
-      <img className="" src={evaluAtIcon} />
+    <div className="">
+      <img className="p-5" src={evaluAtIcon} />
       <Form {...form}>
         <form className="flex flex-col gap-3">
           <FormField
@@ -48,11 +46,12 @@ export function LoginPage() {
               <FormItem>
                 <FormControl>
                   <Input
-                    className="rounded text-slate-400"
+                    className="rounded text-slate-700"
                     placeholder="Email"
                     {...field}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -63,7 +62,7 @@ export function LoginPage() {
               <FormItem>
                 <FormControl>
                   <Input
-                    className="rounded text-slate-400"
+                    className="rounded text-slate-700"
                     placeholder="Senha"
                     {...field}
                   />
@@ -73,8 +72,10 @@ export function LoginPage() {
             )}
           />
           <Button
-            type="submit"
+            type="button"
             className="hover:bg-slate-700 text-white bg-slate-950 rounded"
+            disabled={!form.formState.isValid}
+            onClick={form.handleSubmit(onSubmit)}
           >
             Entrar
           </Button>
