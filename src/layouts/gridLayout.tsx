@@ -1,6 +1,7 @@
+import { Outlet } from 'react-router-dom';
 import { BgIconLayout } from './bgIconLayout';
 
-export function GridLayout({ children }: { children: React.ReactNode }) {
+export function GridLayout({ Outlet }: { Outlet: JSX.Element }) {
   return (
     <div className="px-[89px] py-[50px]  h-screen w-screen flex justify-center items-center">
       <div className=" min-h-full min-w-full grid grid-cols-12 gap-[34px]">
@@ -16,7 +17,7 @@ export function GridLayout({ children }: { children: React.ReactNode }) {
         <div className="bg-black/10"></div>
         <div className="bg-black/10"></div>
         <div className="bg-black/10"></div>
-        {children}
+        {Outlet}
       </div>
       <BgIconLayout />
       <div className="absolute text-[#0F172A] text-xs font-inter bottom-0 place-self-center">

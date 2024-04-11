@@ -36,7 +36,7 @@ export function LoginPage() {
 
   return (
     <div className="absolute flex flex-col place-self-center">
-      <img className="pb-[35px]" src={evaluAtIcon} />
+      <img className="pb-[35px] px-6" src={evaluAtIcon} />
       <Form {...form}>
         <form className="flex flex-col">
           <FormField

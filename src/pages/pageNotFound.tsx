@@ -3,7 +3,7 @@ export function PageNotFound() {
   return (
     <h1 className="flex flex-col gap-2">
       404 PageNotFound
-      <Link to="/">Go to Home</Link>
+      <Link to="/login">Go to Login</Link>
     </h1>
   );
 }
