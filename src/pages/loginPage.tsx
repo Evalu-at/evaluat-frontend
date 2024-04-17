@@ -4,11 +4,11 @@ import { Input } from '../components/ui/input';
 
 export function LoginPage() {
   return (
-    <div className="gap-5 flex flex-col">
+    <div className="gap-4 flex flex-col">
       <img className="" src={evaluAtIcon} />
       <Input className="rounded text-slate-600/90" placeholder="E-mail" />
       <Input className="rounded text-slate-600/90" placeholder="Password" />
-      <Button className="hover:bg-slate-700 text-white bg-slate-950">
+      <Button className="mt-3 rounded hover:bg-slate-700 text-white bg-slate-950">
         Entrar
       </Button>
       <span className="text-slate-600">

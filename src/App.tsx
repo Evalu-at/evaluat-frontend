@@ -1,10 +1,11 @@
 import { GridLayout } from './layouts/gridLayout';
-import { LoginPage } from './pages/loginPage';
+// import { LoginPage } from './pages/loginPage';
+import { SignUpPage } from './pages/signupPage';
 
 export function App() {
   return (
     <GridLayout>
-      <LoginPage />
+      <SignUpPage />
     </GridLayout>
   );
 }
