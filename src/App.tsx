@@ -1,10 +1,9 @@
-import { GridLayout } from './layouts/gridLayout';
-import { LoginPage } from './pages/loginPage';
-
+import { defaultRouter } from './shared/router';
+import {
+  BrowserRouter as Router,
+  RouterProvider,
+  Routes,
+} from 'react-router-dom';
 export function App() {
-  return (
-    <GridLayout>
-      <LoginPage />
-    </GridLayout>
-  );
+  return <RouterProvider router={defaultRouter} />;
 }
