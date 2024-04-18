@@ -1,11 +1,7 @@
-import { GridLayout } from './layouts/gridLayout';
-// import { LoginPage } from './pages/loginPage';
-import { SignUpPage } from './pages/signupPage';
+import { RouterProvider } from 'react-router-dom';
+
+import { defaultRouter } from './routes/router';
 
 export function App() {
-  return (
-    <GridLayout>
-      <SignUpPage />
-    </GridLayout>
-  );
+  return <RouterProvider router={defaultRouter} />;
 }
