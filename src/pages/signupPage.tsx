@@ -16,13 +16,17 @@ export function SignUpPage() {
       />
       <div className="rounded w-[422px] h-[42px] p-[5px] border border-slate-300 flex">
         <div
-          className={`flex-grow h-full ${role === 'aluno' ? 'bg-slate-900 text-white' : 'text-gray-900'} rounded flex justify-center items-center cursor-pointer`}
+          className={`flex-grow h-full transition-colors duration-700 
+          ${role === 'aluno' ? 'bg-slate-900 text-white' : 'text-gray-900'} 
+          rounded flex justify-center items-center cursor-pointer`}
           onClick={() => setRole('aluno')}
         >
           Aluno
         </div>
         <div
-          className={`flex-grow h-full ${role === 'coordenador' ? 'bg-slate-900 text-white' : 'text-gray-900'} rounded flex justify-center items-center cursor-pointer`}
+          className={`flex-grow h-full transition-colors duration-700 
+          ${role === 'coordenador' ? 'bg-slate-900 text-white' : 'text-gray-900'}
+          rounded flex justify-center items-center cursor-pointer`}
           onClick={() => setRole('coordenador')}
         >
           Coordenador
