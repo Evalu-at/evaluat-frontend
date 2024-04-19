@@ -1,6 +1,5 @@
-import { useState } from 'react';
-
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import z from 'zod';
@@ -21,42 +20,137 @@ import { Input } from '../components/ui/input';
 
 export function SignUpPage() {
   const [role, setRole] = useState('aluno');
+  const formSchema = z.object({
+    email: z.string().email({ message: 'Formato de e-mail inválido' }),
+    password: z.string().min(8, { message: 'Senha muito curta!' }),
+    confirmPassword: z.string().min(8, { message: 'Senha muito curta!' }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+    mode: 'onChange',
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    if (values.password !== values.confirmPassword) {
+      // Exibir mensagem de erro caso as senhas não coincidam
+      form.setError('confirmPassword', {
+        type: 'manual',
+        message: 'As senhas não coincidem!',
+      });
+      return;
+    }
+    // Continuar com o envio do formulário
+    console.log(values);
+  }
+
   return (
-    <div className="gap-2 flex flex-col">
-      <img className="" src={evaluAtIcon} />
-      <Input className="rounded text-slate-600/90" placeholder="E-mail" />
-      <Input className="rounded text-slate-600/90" placeholder="Senha" />
-      <Input
-        className="rounded text-slate-600/90"
-        placeholder="Confirme sua senha"
-      />
-      <div className="rounded w-[422px] h-[42px] p-[5px] border border-slate-300 flex">
-        <div
-          className={`flex-grow h-full transition-colors duration-700 
+    <div className="absolute flex flex-col place-self-center gap-2">
+      <img className="pb-[35px] px-6" src={evaluAtIcon} />
+      <Form {...form}>
+        <form className="flex flex-col" onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            name="email"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="pb-2">
+                <FormControl>
+                  <Input
+                    type="email"
+                    className="rounded text-slate-700"
+                    placeholder="Email"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="password"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="pb-2">
+                <FormControl>
+                  <Input
+                    type="password"
+                    className="rounded text-slate-700"
+                    placeholder="Senha"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="confirmPassword"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="pb-2">
+                <FormControl>
+                  <Input
+                    type="password"
+                    className="rounded text-slate-700"
+                    placeholder="Confirme sua senha"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="rounded w-[422px] h-[42px] p-[5px] border border-slate-300 flex">
+            <Button
+              className={`flex-grow h-full transition-colors duration-700 
           ${role === 'aluno' ? 'bg-slate-900 text-white' : 'text-gray-900'} 
           rounded flex justify-center items-center cursor-pointer`}
-          onClick={() => setRole('aluno')}
-        >
-          Aluno
-        </div>
-        <div
-          className={`flex-grow h-full transition-colors duration-700 
+              onClick={() => setRole('aluno')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setRole('aluno');
+                }
+              }}
+              role="button"
+              tabIndex={0}
+            >
+              Aluno
+            </Button>
+            <Button
+              className={`flex-grow h-full transition-colors duration-700 
           ${role === 'coordenador' ? 'bg-slate-900 text-white' : 'text-gray-900'}
           rounded flex justify-center items-center cursor-pointer`}
-          onClick={() => setRole('coordenador')}
-        >
-          Coordenador
-        </div>
-      </div>
-      <Button className="mt-5 rounded hover:bg-slate-700 text-white bg-slate-900">
-        Registrar
-      </Button>
-      <span className="text-slate-600">
+              onClick={() => setRole('coordenador')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setRole('coordenador');
+                }
+              }}
+              tabIndex={0}
+            >
+              Coordenador
+            </Button>
+          </div>
+          <Button
+            type="submit"
+            className="mt-5 rounded hover:bg-slate-700 text-white bg-slate-900"
+            disabled={!form.formState.isValid}
+          >
+            Registrar
+          </Button>
+        </form>
+      </Form>
+      <div className="text-slate-500">
         Já tem conta?{' '}
-        <a className="underline" href="/login">
+        <Link className="underline" to="/login">
           Clique Aqui.
-        </a>
-      </span>
+        </Link>
+      </div>
     </div>
   );
 }
