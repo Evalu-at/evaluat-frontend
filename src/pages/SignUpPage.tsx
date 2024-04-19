@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import z from 'zod';
@@ -15,15 +14,19 @@ import {
 } from '@/components/ui/form';
 
 import evaluAtIcon from '../assets/evaluAtIcon.svg';
-import { Button } from '../components/ui/button';
+import { Button, buttonVariants } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 
 export function SignUpPage() {
-  const [role, setRole] = useState('aluno');
   const formSchema = z.object({
     email: z.string().email({ message: 'Formato de e-mail inválido' }),
     password: z.string().min(8, { message: 'Senha muito curta!' }),
     confirmPassword: z.string().min(8, { message: 'Senha muito curta!' }),
+    role: z
+      .string()
+      .refine(
+        (DefineRole) => DefineRole === 'aluno' || DefineRole === 'coordenador',
+      ),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -32,8 +35,9 @@ export function SignUpPage() {
       email: '',
       password: '',
       confirmPassword: '',
+      role: '',
     },
-    mode: 'onChange',
+    mode: 'onBlur',
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -105,44 +109,53 @@ export function SignUpPage() {
               </FormItem>
             )}
           />
-          <div className="rounded w-[422px] h-[42px] p-[5px] border border-slate-300 flex">
+          <FormField
+            name="role"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="rounded h-[42px] p-[5px] border border-slate-300 flex">
+                    <Button
+                      variant="nohover"
+                      type="button"
+                      className={`flex-grow h-full transition-colors duration-700
+                      ${form.watch('role') === 'aluno' ? 'bg-slate-900 text-white' : 'text-gray-900'} 
+                      rounded flex justify-center items-center cursor-pointer`}
+                      onClick={() => {
+                        form.setValue('role', 'aluno');
+                        form.trigger('role');
+                      }}
+                    >
+                      Aluno
+                    </Button>
+                    <Button
+                      variant="nohover"
+                      type="button"
+                      className={`flex-grow h-full transition-colors duration-700
+                      ${form.watch('role') === 'coordenador' ? 'bg-slate-900 text-white' : 'text-gray-900'}
+                      rounded flex justify-center items-center cursor-pointer`}
+                      onClick={() => {
+                        form.setValue('role', 'coordenador');
+                        form.trigger('role');
+                      }}
+                    >
+                      Coordenador
+                    </Button>
+                  </div>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormItem>
             <Button
-              className={`flex-grow h-full transition-colors duration-700 
-          ${role === 'aluno' ? 'bg-slate-900 text-white' : 'text-gray-900'} 
-          rounded flex justify-center items-center cursor-pointer`}
-              onClick={() => setRole('aluno')}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  setRole('aluno');
-                }
-              }}
-              role="button"
-              tabIndex={0}
+              type="submit"
+              className="mt-5 rounded hover:bg-slate-700 text-white bg-slate-900 w-full"
+              disabled={!form.formState.isValid}
             >
-              Aluno
+              Registrar
             </Button>
-            <Button
-              className={`flex-grow h-full transition-colors duration-700 
-          ${role === 'coordenador' ? 'bg-slate-900 text-white' : 'text-gray-900'}
-          rounded flex justify-center items-center cursor-pointer`}
-              onClick={() => setRole('coordenador')}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  setRole('coordenador');
-                }
-              }}
-              tabIndex={0}
-            >
-              Coordenador
-            </Button>
-          </div>
-          <Button
-            type="submit"
-            className="mt-5 rounded hover:bg-slate-700 text-white bg-slate-900"
-            disabled={!form.formState.isValid}
-          >
-            Registrar
-          </Button>
+          </FormItem>
         </form>
       </Form>
       <div className="text-slate-500">
