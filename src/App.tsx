@@ -1,9 +1,7 @@
-import { defaultRouter } from './shared/router';
-import {
-  BrowserRouter as Router,
-  RouterProvider,
-  Routes,
-} from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
+
+import { defaultRouter } from './routes/router';
+
 export function App() {
   return <RouterProvider router={defaultRouter} />;
 }

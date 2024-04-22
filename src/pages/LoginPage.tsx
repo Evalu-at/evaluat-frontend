@@ -1,9 +1,8 @@
-import evaluAtIcon from '../assets/evaluAtIcon.svg';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import z from 'zod';
+
 import {
   Form,
   FormControl,
@@ -13,7 +12,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Link } from 'react-router-dom';
+
+import evaluAtIcon from '../assets/evaluAtIcon.svg';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
 
 export function LoginPage() {
   const formSchema = z.object({
