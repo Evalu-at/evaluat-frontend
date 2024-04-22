@@ -4,7 +4,7 @@ import { GridLayout } from '@/layouts/GridLayout';
 import { PageNotFound } from '@/pages/PageNotFound';
 import { LoginPage } from '@/pages/LoginPage';
 import { SignUpPage } from '@/pages/SignUpPage';
-import { TfPage } from '@/pages/TfPage';
+import { OtpPage } from '@/pages/OtpPage';
 
 export const defaultRouter = createBrowserRouter([
   {
@@ -13,7 +13,7 @@ export const defaultRouter = createBrowserRouter([
     children: [
       { path: ROUTES.LOGIN, element: <LoginPage /> }, // Assuming you have a HomePage component
       { path: ROUTES.SIGNUP, element: <SignUpPage /> },
-      { path: ROUTES.TFPAGE, element: <TfPage /> },
+      { path: ROUTES.TFPAGE, element: <OtpPage /> },
     ],
   },
 ]);
