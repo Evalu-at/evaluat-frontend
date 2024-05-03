@@ -1,11 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { GridLayout } from '../layouts/GridLayout';
+import { HomeCoordenador } from '../pages/HomeCoordenador';
 import { LoginPage } from '../pages/LoginPage';
+import { OtpPage } from '../pages/OtpPage';
 import { PageNotFound } from '../pages/PageNotFound';
 import { SignUpPage } from '../pages/SignUpPage';
 import { ROUTES } from '../shared';
-import { OtpPage } from '../pages/OtpPage';
 
 export const defaultRouter = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ export const defaultRouter = createBrowserRouter([
       { path: ROUTES.LOGIN, element: <LoginPage /> },
       { path: ROUTES.SIGNUP, element: <SignUpPage /> },
       { path: ROUTES.OTP, element: <OtpPage /> },
+      { path: ROUTES.HOME_COORDENADOR, element: <HomeCoordenador /> },
     ],
   },
 ]);

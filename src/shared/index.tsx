@@ -3,4 +3,5 @@ export const ROUTES = {
   LOGIN: '/login',
   SIGNUP: '/signup',
   OTP: '/otp',
+  HOME_COORDENADOR: '/home-coordenador',
 };
