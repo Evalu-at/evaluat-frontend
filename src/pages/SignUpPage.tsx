@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import z from 'zod';
+import axios from 'axios';
+import { redirect, Link } from 'react-router-dom';
 
 import {
   Form,
@@ -20,12 +21,12 @@ import { Input } from '../components/ui/input';
 export function SignUpPage() {
   const formSchema = z.object({
     email: z.string().email({ message: 'Formato de e-mail inválido' }),
-    password: z.string().min(8, { message: 'Senha muito curta!' }),
+    senha: z.string().min(8, { message: 'Senha muito curta!' }),
     confirmPassword: z.string().min(8, { message: 'Senha muito curta!' }),
-    role: z
+    cargo: z
       .string()
       .refine(
-        (DefineRole) => DefineRole === 'aluno' || DefineRole === 'coordenador',
+        (DefineRole) => DefineRole === 'Aluno' || DefineRole === 'Coordenador',
       ),
   });
 
@@ -33,24 +34,43 @@ export function SignUpPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
-      password: '',
+      senha: '',
       confirmPassword: '',
-      role: '',
+      cargo: '',
     },
     mode: 'onBlur',
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (values.password !== values.confirmPassword) {
+    if (values.senha !== values.confirmPassword) {
       // Exibir mensagem de erro caso as senhas não coincidam
       form.setError('confirmPassword', {
         type: 'manual',
         message: 'As senhas não coincidem!',
       });
       return;
+    } else {
+      const dados = {
+        email: values.email,
+        senha: values.senha,
+        cargo: values.cargo,
+        nome: 'thiago',
+      };
+      const test = { email: values.email };
+      axios.post('http://localhost:3000/user/add', dados).then((res) => {
+        if (res.status === 200) {
+          axios
+            .get('http://localhost:3000/user/verify', {
+              params: { email: JSON.stringify({ email: dados.email }) },
+            })
+            .then((res) => {
+              if (res.status === 200) {
+                redirect('/otp');
+              }
+            });
+        }
+      });
     }
-    // Continuar com o envio do formulário
-    console.log(values);
   }
 
   return (
@@ -76,7 +96,7 @@ export function SignUpPage() {
             )}
           />
           <FormField
-            name="password"
+            name="senha"
             control={form.control}
             render={({ field }) => (
               <FormItem className="pb-2">
@@ -110,7 +130,7 @@ export function SignUpPage() {
             )}
           />
           <FormField
-            name="role"
+            name="cargo"
             control={form.control}
             render={({ field }) => (
               <FormItem>
@@ -120,11 +140,11 @@ export function SignUpPage() {
                       variant="nohover"
                       type="button"
                       className={`flex-grow h-full transition-colors duration-700
-                      ${form.watch('role') === 'aluno' ? 'bg-slate-900 text-white' : 'text-gray-900'} 
+                      ${form.watch('cargo') === 'Aluno' ? 'bg-slate-900 text-white' : 'text-gray-900'} 
                       rounded flex justify-center items-center cursor-pointer`}
                       onClick={() => {
-                        form.setValue('role', 'aluno');
-                        form.trigger('role');
+                        form.setValue('cargo', 'Aluno');
+                        form.trigger('cargo');
                       }}
                     >
                       Aluno
@@ -133,11 +153,11 @@ export function SignUpPage() {
                       variant="nohover"
                       type="button"
                       className={`flex-grow h-full transition-colors duration-700
-                      ${form.watch('role') === 'coordenador' ? 'bg-slate-900 text-white' : 'text-gray-900'}
+                      ${form.watch('cargo') === 'Coordenador' ? 'bg-slate-900 text-white' : 'text-gray-900'}
                       rounded flex justify-center items-center cursor-pointer`}
                       onClick={() => {
-                        form.setValue('role', 'coordenador');
-                        form.trigger('role');
+                        form.setValue('cargo', 'Coordenador');
+                        form.trigger('cargo');
                       }}
                     >
                       Coordenador

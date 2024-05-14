@@ -7,6 +7,7 @@ import { OtpPage } from '../pages/OtpPage';
 import { PageNotFound } from '../pages/PageNotFound';
 import { SignUpPage } from '../pages/SignUpPage';
 import { ROUTES } from '../shared';
+import RequireAuth from '@auth-kit/react-router/RequireAuth';
 
 export const defaultRouter = createBrowserRouter([
   {
@@ -16,7 +17,14 @@ export const defaultRouter = createBrowserRouter([
       { path: ROUTES.LOGIN, element: <LoginPage /> },
       { path: ROUTES.SIGNUP, element: <SignUpPage /> },
       { path: ROUTES.OTP, element: <OtpPage /> },
-      { path: ROUTES.HOME_COORDENADOR, element: <HomeCoordenador /> },
+      {
+        path: ROUTES.HOME_COORDENADOR,
+        element: (
+          <RequireAuth fallbackPath={'/login'}>
+            <HomeCoordenador />
+          </RequireAuth>
+        ),
+      },
     ],
   },
 ]);

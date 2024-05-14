@@ -1,40 +1,54 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import z from 'zod';
-
+import axios from 'axios';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 
 import evaluAtIcon from '../assets/evaluAtIcon.svg';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
+import useSignIn from 'react-auth-kit/hooks/useSignIn';
 
 export function LoginPage() {
   const formSchema = z.object({
     email: z.string().email({ message: 'Formato de e-mail inválido' }),
-    password: z.string().min(8, { message: 'Senha muito curta' }),
+    senha: z.string().min(8, { message: 'Senha muito curta' }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
-      password: '',
+      senha: '',
     },
     mode: 'onChange',
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  // jogar em Services
+  const signIn = useSignIn();
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
-  }
+    axios.post('http://localhost:3000/user/login', values).then((res) => {
+      if (res.status === 200) {
+        if (
+          signIn({
+            auth: { token: res.data.token, type: 'Bearer' },
+
+            userState: { email: values.email },
+          })
+        ) {
+          console.log('Logado com sucesso', res.data.token);
+        }
+      }
+    });
+  };
 
   return (
     <div className="absolute flex flex-col place-self-center">
@@ -59,7 +73,7 @@ export function LoginPage() {
             )}
           />
           <FormField
-            name="password"
+            name="senha"
             control={form.control}
             render={({ field }) => (
               <FormItem className="pb-[27px]">

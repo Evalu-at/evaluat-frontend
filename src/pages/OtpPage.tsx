@@ -39,7 +39,7 @@ export function OtpPage() {
 
   return (
     <div className="absolute flex flex-col place-self-center">
-      <h1 className="text-center font-inter text-[48px] font-bold text-[#0F172A]">
+      <h1 className="text-center font-inter text-[48px] font-black text-[#0F172A]">
         Olá, "nome"
       </h1>
       <p className="font-inter text-[18px] font-semibold">
