@@ -40,7 +40,6 @@ export function LoginPage() {
         if (
           signIn({
             auth: { token: res.data.token, type: 'Bearer' },
-
             userState: { email: values.email },
           })
         ) {

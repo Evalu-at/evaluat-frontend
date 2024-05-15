@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import z from 'zod';
 import axios from 'axios';
-import { redirect, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import {
   Form,
@@ -19,6 +19,8 @@ import { Button, buttonVariants } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 
 export function SignUpPage() {
+  const navigate = useNavigate();
+
   const formSchema = z.object({
     email: z.string().email({ message: 'Formato de e-mail inválido' }),
     senha: z.string().min(8, { message: 'Senha muito curta!' }),
@@ -56,16 +58,14 @@ export function SignUpPage() {
         cargo: values.cargo,
         nome: 'thiago',
       };
-      const test = { email: values.email };
+      let test = { email: dados.email };
       axios.post('http://localhost:3000/user/add', dados).then((res) => {
         if (res.status === 200) {
           axios
-            .get('http://localhost:3000/user/verify', {
-              params: { email: JSON.stringify({ email: dados.email }) },
-            })
+            .post('http://localhost:3000/user/send-otp', test)
             .then((res) => {
               if (res.status === 200) {
-                redirect('/otp');
+                navigate('/otp', { state: { emailData: test } });
               }
             });
         }
