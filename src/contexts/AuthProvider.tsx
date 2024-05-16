@@ -12,7 +12,6 @@ type AuthContextType = {
 };
 
 const AuthContext = createContext<AuthContextType>({});
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>();
 
