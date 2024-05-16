@@ -37,7 +37,9 @@ export function OtpPage() {
 
   const location = useLocation();
   const emailData = location.state?.emailData;
+  const nameUser = location.state?.nome.split(' ')[0];
   const navigate = useNavigate();
+
   function onSubmit(values: z.infer<typeof FormSchema>) {
     axios
       .post('http://localhost:3000/user/verify', {
@@ -55,7 +57,7 @@ export function OtpPage() {
   return (
     <div className="absolute flex flex-col place-self-center">
       <h1 className="text-center font-inter text-[48px] font-black text-[#0F172A]">
-        Olá, "nome"
+        Olá, {nameUser}!
       </h1>
       <p className="font-inter text-[18px] font-semibold">
         Por favor, insira o código que chegou ao seu email!

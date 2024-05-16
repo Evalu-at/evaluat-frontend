@@ -25,6 +25,7 @@ export function SignUpPage() {
     email: z.string().email({ message: 'Formato de e-mail inválido' }),
     senha: z.string().min(8, { message: 'Senha muito curta!' }),
     confirmPassword: z.string().min(8, { message: 'Senha muito curta!' }),
+    nome: z.string(),
     cargo: z
       .string()
       .refine(
@@ -39,6 +40,7 @@ export function SignUpPage() {
       senha: '',
       confirmPassword: '',
       cargo: '',
+      nome: '',
     },
     mode: 'onBlur',
   });
@@ -56,7 +58,7 @@ export function SignUpPage() {
         email: values.email,
         senha: values.senha,
         cargo: values.cargo,
-        nome: 'thiago',
+        nome: values.nome,
       };
       let test = { email: dados.email };
       axios.post('http://localhost:3000/user/add', dados).then((res) => {
@@ -65,7 +67,9 @@ export function SignUpPage() {
             .post('http://localhost:3000/user/send-otp', test)
             .then((res) => {
               if (res.status === 200) {
-                navigate('/otp', { state: { emailData: test } });
+                navigate('/otp', {
+                  state: { emailData: test, nome: values.nome },
+                });
               }
             });
         }
@@ -78,6 +82,23 @@ export function SignUpPage() {
       <img className="pb-[35px] px-6" src={evaluAtIcon} />
       <Form {...form}>
         <form className="flex flex-col" onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            name="nome"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="pb-2">
+                <FormControl>
+                  <Input
+                    type="text"
+                    className="rounded text-slate-700"
+                    placeholder="Nome Completo"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             name="email"
             control={form.control}
