@@ -5,4 +5,5 @@ export const ROUTES = {
   OTP: '/otp',
   HOME_COORDENADOR: '/home-coordenador',
   DASHBOARD: '/dashboard',
+  ALUNOPAGE: '/aluno',
 };

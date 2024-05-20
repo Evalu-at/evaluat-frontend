@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import z from 'zod';
 import axios from 'axios';
 
@@ -18,6 +18,11 @@ import { Input } from '../components/ui/input';
 import useAuth from '@/hooks/UseAuth';
 
 export function LoginPage() {
+  const { setUser } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/dashboard';
+
   const formSchema = z.object({
     email: z.string().email({ message: 'Formato de e-mail inválido' }),
     senha: z.string().min(8, { message: 'Senha muito curta' }),
@@ -33,8 +38,7 @@ export function LoginPage() {
   });
 
   // jogar em Services
-  const { setUser } = useAuth();
-  const navigate = useNavigate();
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const response = await axios.post(
@@ -44,11 +48,10 @@ export function LoginPage() {
       const email = response?.data?.email;
       const token = response?.data?.token;
       //const role = response?.data?.roles;  Como deveria ser
-      const role = 'Aluno';
+      const role = 'Coordenador';
       if (setUser) {
         setUser({ email, role, token });
-        localStorage.setItem('_authToken', token);
-        navigate('/dashboard');
+        navigate(from, { replace: true });
       }
     } catch (err) {
       console.error('Erro ao logar', err);

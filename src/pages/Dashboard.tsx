@@ -7,6 +7,7 @@ export function Dashboard() {
       <Link to="/otp">Login</Link>
       <Link to="/signup">Signup</Link>
       <Link to="/home-coordenador">Home</Link>
+      <Link to="/aluno">Aluno</Link>
     </div>
   );
 }
