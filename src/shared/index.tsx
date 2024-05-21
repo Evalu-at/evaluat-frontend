@@ -4,4 +4,6 @@ export const ROUTES = {
   SIGNUP: '/signup',
   OTP: '/otp',
   HOME_COORDENADOR: '/home-coordenador',
+  DASHBOARD: '/dashboard',
+  ALUNOPAGE: '/aluno',
 };

@@ -2,6 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import {
   Form,
   FormControl,
@@ -33,14 +35,29 @@ export function OtpPage() {
     mode: 'onChange',
   });
 
+  const location = useLocation();
+  const emailData = location.state?.emailData;
+  const nameUser = location.state?.nome.split(' ')[0];
+  const navigate = useNavigate();
+
   function onSubmit(values: z.infer<typeof FormSchema>) {
-    console.log(values);
+    axios
+      .post('http://localhost:3000/user/verify', {
+        email: emailData.email,
+        userTotpInput: values.pin,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log('Código verificado com sucesso', res.data);
+          navigate('/login');
+        }
+      });
   }
 
   return (
     <div className="absolute flex flex-col place-self-center">
-      <h1 className="text-center font-inter text-[48px] font-bold text-[#0F172A]">
-        Olá, "nome"
+      <h1 className="text-center font-inter text-[48px] font-black text-[#0F172A]">
+        Olá, {nameUser}!
       </h1>
       <p className="font-inter text-[18px] font-semibold">
         Por favor, insira o código que chegou ao seu email!

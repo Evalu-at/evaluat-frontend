@@ -1,40 +1,62 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import z from 'zod';
+import axios from 'axios';
 
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 
 import evaluAtIcon from '../assets/evaluAtIcon.svg';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
+import useAuth from '@/hooks/UseAuth';
 
 export function LoginPage() {
+  const { setUser } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/dashboard';
+
   const formSchema = z.object({
     email: z.string().email({ message: 'Formato de e-mail inválido' }),
-    password: z.string().min(8, { message: 'Senha muito curta' }),
+    senha: z.string().min(8, { message: 'Senha muito curta' }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
-      password: '',
+      senha: '',
     },
     mode: 'onChange',
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  // jogar em Services
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/user/login',
+        values,
+      );
+      const email = response?.data?.email;
+      const token = response?.data?.token;
+      //const role = response?.data?.roles;  Como deveria ser
+      const role = 'Coordenador';
+      if (setUser) {
+        setUser({ email, role, token });
+        navigate(from, { replace: true });
+      }
+    } catch (err) {
+      console.error('Erro ao logar', err);
+    }
+  };
 
   return (
     <div className="absolute flex flex-col place-self-center">
@@ -59,7 +81,7 @@ export function LoginPage() {
             )}
           />
           <FormField
-            name="password"
+            name="senha"
             control={form.control}
             render={({ field }) => (
               <FormItem className="pb-[27px]">

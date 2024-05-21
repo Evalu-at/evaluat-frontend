@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import z from 'zod';
+import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
 
 import {
   Form,
@@ -18,14 +19,17 @@ import { Button, buttonVariants } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 
 export function SignUpPage() {
+  const navigate = useNavigate();
+
   const formSchema = z.object({
     email: z.string().email({ message: 'Formato de e-mail inválido' }),
-    password: z.string().min(8, { message: 'Senha muito curta!' }),
+    senha: z.string().min(8, { message: 'Senha muito curta!' }),
     confirmPassword: z.string().min(8, { message: 'Senha muito curta!' }),
-    role: z
+    nome: z.string(),
+    cargo: z
       .string()
       .refine(
-        (DefineRole) => DefineRole === 'aluno' || DefineRole === 'coordenador',
+        (DefineRole) => DefineRole === 'Aluno' || DefineRole === 'Coordenador',
       ),
   });
 
@@ -33,24 +37,44 @@ export function SignUpPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
-      password: '',
+      senha: '',
       confirmPassword: '',
-      role: '',
+      cargo: '',
+      nome: '',
     },
     mode: 'onBlur',
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (values.password !== values.confirmPassword) {
+    if (values.senha !== values.confirmPassword) {
       // Exibir mensagem de erro caso as senhas não coincidam
       form.setError('confirmPassword', {
         type: 'manual',
         message: 'As senhas não coincidem!',
       });
       return;
+    } else {
+      const dados = {
+        email: values.email,
+        senha: values.senha,
+        cargo: values.cargo,
+        nome: values.nome,
+      };
+      let test = { email: dados.email };
+      axios.post('http://localhost:3000/user/add', dados).then((res) => {
+        if (res.status === 200) {
+          axios
+            .post('http://localhost:3000/user/send-otp', test)
+            .then((res) => {
+              if (res.status === 200) {
+                navigate('/otp', {
+                  state: { emailData: test, nome: values.nome },
+                });
+              }
+            });
+        }
+      });
     }
-    // Continuar com o envio do formulário
-    console.log(values);
   }
 
   return (
@@ -58,6 +82,23 @@ export function SignUpPage() {
       <img className="pb-[35px] px-6" src={evaluAtIcon} />
       <Form {...form}>
         <form className="flex flex-col" onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            name="nome"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="pb-2">
+                <FormControl>
+                  <Input
+                    type="text"
+                    className="rounded text-slate-700"
+                    placeholder="Nome Completo"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             name="email"
             control={form.control}
@@ -76,7 +117,7 @@ export function SignUpPage() {
             )}
           />
           <FormField
-            name="password"
+            name="senha"
             control={form.control}
             render={({ field }) => (
               <FormItem className="pb-2">
@@ -110,7 +151,7 @@ export function SignUpPage() {
             )}
           />
           <FormField
-            name="role"
+            name="cargo"
             control={form.control}
             render={({ field }) => (
               <FormItem>
@@ -120,11 +161,11 @@ export function SignUpPage() {
                       variant="nohover"
                       type="button"
                       className={`flex-grow h-full transition-colors duration-700
-                      ${form.watch('role') === 'aluno' ? 'bg-slate-900 text-white' : 'text-gray-900'} 
+                      ${form.watch('cargo') === 'Aluno' ? 'bg-slate-900 text-white' : 'text-gray-900'} 
                       rounded flex justify-center items-center cursor-pointer`}
                       onClick={() => {
-                        form.setValue('role', 'aluno');
-                        form.trigger('role');
+                        form.setValue('cargo', 'Aluno');
+                        form.trigger('cargo');
                       }}
                     >
                       Aluno
@@ -133,11 +174,11 @@ export function SignUpPage() {
                       variant="nohover"
                       type="button"
                       className={`flex-grow h-full transition-colors duration-700
-                      ${form.watch('role') === 'coordenador' ? 'bg-slate-900 text-white' : 'text-gray-900'}
+                      ${form.watch('cargo') === 'Coordenador' ? 'bg-slate-900 text-white' : 'text-gray-900'}
                       rounded flex justify-center items-center cursor-pointer`}
                       onClick={() => {
-                        form.setValue('role', 'coordenador');
-                        form.trigger('role');
+                        form.setValue('cargo', 'Coordenador');
+                        form.trigger('cargo');
                       }}
                     >
                       Coordenador
