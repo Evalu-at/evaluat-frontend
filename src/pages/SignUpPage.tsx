@@ -1,9 +1,9 @@
+// SignUpPage.tsx
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import z from 'zod';
-import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-
+import { addUser, sendOtp } from '../services/UserService';
 import {
   Form,
   FormControl,
@@ -13,14 +13,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
 import evaluAtIcon from '../assets/evaluAtIcon.svg';
 import { Button, buttonVariants } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-
 export function SignUpPage() {
   const navigate = useNavigate();
-
+  const { setError } = useForm();
   const formSchema = z.object({
     email: z.string().email({ message: 'Formato de e-mail inválido' }),
     senha: z.string().min(8, { message: 'Senha muito curta!' }),
@@ -32,7 +30,6 @@ export function SignUpPage() {
         (DefineRole) => DefineRole === 'Aluno' || DefineRole === 'Coordenador',
       ),
   });
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,8 +41,7 @@ export function SignUpPage() {
     },
     mode: 'onBlur',
   });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.senha !== values.confirmPassword) {
       // Exibir mensagem de erro caso as senhas não coincidam
       form.setError('confirmPassword', {
@@ -54,29 +50,22 @@ export function SignUpPage() {
       });
       return;
     } else {
-      const dados = {
-        email: values.email,
-        senha: values.senha,
-        cargo: values.cargo,
-        nome: values.nome,
-      };
-      let test = { email: dados.email };
-      axios.post('http://localhost:3000/user/add', dados).then((res) => {
-        if (res.status === 200) {
-          axios
-            .post('http://localhost:3000/user/send-otp', test)
-            .then((res) => {
-              if (res.status === 200) {
-                navigate('/otp', {
-                  state: { emailData: test, nome: values.nome },
-                });
-              }
+      try {
+        const addUserStatus = await addUser(values);
+        if (addUserStatus === 200) {
+          const otpStatus = await sendOtp({ email: values.email });
+          if (otpStatus === 200) {
+            navigate('/otp', {
+              state: { emailData: { email: values.email }, nome: values.nome },
             });
+          }
         }
-      });
+      } catch (error) {
+        // Handle errors here if needed
+        console.error('Error during sign up process:', error);
+      }
     }
   }
-
   return (
     <div className="absolute flex flex-col place-self-center gap-2">
       <img className="pb-[35px] px-6" src={evaluAtIcon} />
