@@ -2,9 +2,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { verifyOtp } from '@/services/UserService';
-import axios from 'axios';
+import { toast } from 'sonner';
 import {
   Form,
   FormControl,
@@ -28,6 +28,10 @@ const FormSchema = z.object({
 });
 
 export function OtpPage() {
+  const location = useLocation();
+  const nameUser = location.state?.nome.split(' ')[0];
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -36,12 +40,17 @@ export function OtpPage() {
     mode: 'onChange',
   });
 
-  const location = useLocation();
-  const emailData = location.state?.emailData;
-  const nameUser = location.state?.nome.split(' ')[0];
-
   async function onSubmit(values: z.infer<typeof FormSchema>) {
-    const otpStatus = await verifyOtp(location.state?.emailData, values.pin);
+    const otpResult = await verifyOtp({
+      email: location.state?.emailData,
+      pin: values.pin,
+    });
+    if (otpResult == 200) {
+      toast('Uhuuul! ✅', {
+        description: 'Código do email validado!',
+      });
+      navigate('/login');
+    }
   }
 
   return (

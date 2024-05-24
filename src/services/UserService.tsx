@@ -1,6 +1,6 @@
 const API_URL = 'http://localhost:3000/user';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface UserData {
   email: string;
@@ -34,6 +34,7 @@ export async function addUser(userData: UserData) {
     throw error;
   }
 }
+
 export async function sendOtp(OtpDataGet: OtpDataGet) {
   try {
     const response = await axios.post(`${API_URL}/send-otp`, OtpDataGet);
@@ -45,16 +46,18 @@ export async function sendOtp(OtpDataGet: OtpDataGet) {
 }
 
 export async function verifyOtp(otpDataPost: otpDataPost) {
-  const navigate = useNavigate();
-  axios
-    .post('http://localhost:3000/user/verify', {
+  try {
+    const response = await axios.post('http://localhost:3000/user/verify', {
       email: otpDataPost.email,
       userTotpInput: otpDataPost.pin,
-    })
-    .then((res) => {
-      if (res.status === 200) {
-        console.log('Código verificado com sucesso', res.data);
-        navigate('/login');
-      }
     });
+
+    return response.status;
+  } catch (error) {
+    toast('Código inválido! ❌', {
+      description: 'Código do email está incorreto!',
+    });
+    console.error('Error verifying OTP:', error);
+    throw error;
+  }
 }

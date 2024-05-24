@@ -21,6 +21,10 @@ module.exports = {
       fontFamily: {
         inter: ['Inter'],
       },
+      spacing: {
+        '68px': '68px',
+      },
+
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

@@ -48,11 +48,13 @@ export function LoginPage() {
       const email = response?.data?.email;
       const token = response?.data?.token;
       //const role = response?.data?.roles;  Como deveria ser
-      const role = 'Coordenador';
+      const role = 'Aluno';
+
       if (setUser) {
         setUser({ email, role, token });
         navigate(from, { replace: true });
       }
+      console.log(token);
     } catch (err) {
       console.error('Erro ao logar', err);
     }
