@@ -14,7 +14,7 @@ const RequireAuth: React.FC<RequireAuthProps> = ({ roles }) => {
   }
 
   if (!roles.includes(user.role)) {
-    return <Navigate to="/unauthorized" state={{ from: location }} replace />;
+    return <Navigate to="/dashboard" state={{ from: location }} replace />;
   }
 
   return <Outlet />;

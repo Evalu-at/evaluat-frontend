@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import AlertDialog from '../components/AlertDialog';
 
 export default function AlunoPage() {
   return (
